@@ -1,0 +1,6 @@
+name = Webform Submit Button
+description = Adds a webform submit button component which can be placed like any other component.
+core = 7.x
+version = 7.x-1.0
+package = Webform
+dependencies[] = webform
