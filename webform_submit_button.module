@@ -1,0 +1,75 @@
+<?php
+/**
+ * @file
+ * Webform submit button module.
+ */
+
+
+/**
+ * Implements hook webform_component_info().
+ */
+function webform_submit_button_webform_component_info() {
+  $components = array();
+  $components['submit_button'] = array(
+    'label' => t('Submit button'),
+    'description' => t('Displays Submit Button in the Form as a webform component.'),
+    'features' => array(
+      'analysis' => FALSE,
+      'csv' => FALSE,
+      'default_value' => FALSE,
+      'description' => FALSE,
+      'email' => FALSE,
+      'required' => FALSE,
+      'conditional' => FALSE,
+      'title_display' => FALSE,
+      'private' => FALSE,
+      'wrapper_classes' => FALSE,
+      'css_classes' => FALSE,
+    ),
+    'file' => 'webform_submit_button_component.inc',
+  );
+
+  return $components;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function webform_submit_button_form_alter(&$form, &$form_state, $form_id) {
+
+  // We only want to execute this in a very particular case where we are
+  // rendering a webform for display.  There may be a more elegant way to
+  // detect that case.
+  if (!isset($form['#node'])) {
+    return;
+  }
+
+  $is_webform = $form['#node']->type == 'webform';
+  $is_webform_render = isset($form['submitted']);
+  if (!$is_webform || !$is_webform_render) {
+    return;
+  }
+
+  // At this point we know that we are rendering a webform.
+  foreach ($form['submitted'] as $key => $value) {
+    $current_component_type = $value['#webform_component']['type'];
+
+    if ($current_component_type == 'submit_button') {
+
+      // Get the weight of the user's submit button component.
+      $current_weight = $value['#webform_component']['weight'];
+
+      // Apply the weight to the actual webform submit button.
+      $actions = $form['actions'];
+      $actions['#weight'] = $current_weight;
+
+      // Move the webform submit button into the position of the
+      // user's submit button component.  Remove the user's component since it
+      // was really just a placeholder for the real thing.
+
+      unset($form['actions']);
+      unset($form['submitted'][$key]);
+      $form['submitted']['submit_button'] = $actions;
+    }
+  }
+}
