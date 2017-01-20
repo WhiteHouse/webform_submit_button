@@ -99,7 +99,7 @@ function webform_submit_button_form_alter(&$form, &$form_state, $form_id) {
       $actions = $form['actions'];
       $actions['#weight'] = $current_weight;
 
-      unset($form['actions']);
+      $form['actions']['#access'] = FALSE;
       $element = $actions;
     }
   }
