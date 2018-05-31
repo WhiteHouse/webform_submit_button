@@ -56,20 +56,11 @@ function webform_submit_button_form_alter(&$form, &$form_state, $form_id) {
 
     if ($current_component_type == 'submit_button') {
 
-      // Get the weight of the user's submit button component.
-      $current_weight = $value['#webform_component']['weight'];
-
-      // Apply the weight to the actual webform submit button.
-      $actions = $form['actions'];
-      $actions['#weight'] = $current_weight;
-
       // Move the webform submit button into the position of the
-      // user's submit button component.  Remove the user's component since it
-      // was really just a placeholder for the real thing.
-
+      // user's submit button component.
+      $actions = $form['actions'];
       unset($form['actions']);
-      unset($form['submitted'][$key]);
-      $form['submitted']['submit_button'] = $actions;
+      $form['submitted'][$key]['actions'] = $actions;
     }
   }
 }

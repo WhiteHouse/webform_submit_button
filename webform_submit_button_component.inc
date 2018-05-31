@@ -14,11 +14,10 @@
 function _webform_render_submit_button($component, $value = NULL, $filter = TRUE) {
   $wrapper = array(
     '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('placeholder-for-submit-button'),
-    ),
+    '#theme_wrappers' => array('webform_element'),
+    '#webform_component' => $component,
+    '#weight' => $component['weight'],
   );
-
   return $wrapper;
 }
 
